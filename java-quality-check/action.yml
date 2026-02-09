@@ -7,19 +7,26 @@ inputs:
     required: false
     default: "22"
 
+  project-dir:
+    description: "Directory containing pom.xml"
+    required: false
+    default: "."
+
 runs:
   using: "composite"
   steps:
     - name: Setup Java
       uses: actions/setup-java@v3
-      with: 
+      with:
         java-version: ${{ inputs.java-version }}
         distribution: temurin
 
     - name: Build with Maven
       run: mvn clean install
       shell: bash
+      working-directory: ${{ inputs.project-dir }}
 
     - name: Run tests
       run: mvn test
       shell: bash
+      working-directory: ${{ inputs.project-dir }}
