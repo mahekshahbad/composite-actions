@@ -12,8 +12,7 @@ runs:
   steps:
     - name: Setup Java
       uses: actions/setup-java@v3
-      with:
-        distribution: temurin   
+      with: 
         java-version: ${{ inputs.java-version }}
 
     - name: Build with Maven
