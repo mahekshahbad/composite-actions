@@ -1,0 +1,24 @@
+name: "Java Quality Check"
+description: "Reusable CI steps for Java projects"
+
+inputs:
+  java-version:
+    description: "Java version"
+    required: false
+    default: "22"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ inputs.java-version }}
+
+    - name: Build with Maven
+      run: mvn clean install
+      shell: bash
+
+    - name: Run tests
+      run: mvn test
+      shell: bash
