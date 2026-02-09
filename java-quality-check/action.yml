@@ -1,32 +1,23 @@
-name: "Java Quality Check"
-description: "Reusable CI steps for Java projects"
-
-inputs:
-  java-version:
-    description: "Java version"
-    required: false
-    default: "22"
-
-  project-dir:
-    description: "Directory containing pom.xml"
-    required: false
-    default: "."
+name: Java Quality Check
+description: Run Maven build and tests for Java services
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Setup Java
-      uses: actions/setup-java@v3
+    - name: Set up Java
+      uses: actions/setup-java@v4
       with:
-        java-version: ${{ inputs.java-version }}
         distribution: temurin
+        java-version: '17'
 
-    - name: Build with Maven
-      run: mvn clean install
-      shell: bash
-      working-directory: ${{ inputs.project-dir }}
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
 
-    - name: Run tests
-      run: mvn test
+    - name: Build and test
+      run: mvn clean verify
       shell: bash
-      working-directory: ${{ inputs.project-dir }}
